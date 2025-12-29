@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
+import AdminDashBoard from "@/components/AdminDashBoard";
+import DeliveryBoyDashboard from "@/components/DeliveryBoyDashboard";
 import EditRoleMobile from "@/components/EditRoleMobile";
 import Nav from "@/components/Nav";
+import UserDashboard from "@/components/UserDashboard";
 import connectToDatabase from "@/lib/db";
 import User from "@/models/user.model";
 import { redirect } from "next/navigation";
@@ -22,6 +25,11 @@ async function Home() {
   return (
     <div>
      <Nav user={plainUser}/>
+     {
+      user.role==="user" ? <UserDashboard/> : 
+      user.role==="admin" ? <AdminDashBoard/> :
+      <DeliveryBoyDashboard/>
+     }
     </div>
   );
 }
