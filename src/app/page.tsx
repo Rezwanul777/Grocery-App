@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import EditRoleMobile from "@/components/EditRoleMobile";
+import Nav from "@/components/Nav";
 import connectToDatabase from "@/lib/db";
 import User from "@/models/user.model";
 import { redirect } from "next/navigation";
@@ -16,9 +17,11 @@ async function Home() {
   if(inComplete){
    return <EditRoleMobile/>
   }
+
+  const plainUser= JSON.parse(JSON.stringify(user));
   return (
     <div>
-     
+     <Nav user={plainUser}/>
     </div>
   );
 }
