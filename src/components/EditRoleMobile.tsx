@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ArrowRight, Bike, User, UserCog } from "lucide-react";
 import { motion } from "motion/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ const EditRoleMobile = () => {
   ]);
   const [selectedRole, setSelectedRole] = useState<string>("");
     const [mobile, setMobile] = useState<string>("");
+    const {update}=useSession()
   const router = useRouter();
    const handleEditRole = async () => {
   try {
@@ -21,6 +23,7 @@ const EditRoleMobile = () => {
       mobile,
     });
     console.log("Updated:", result.data);
+    await update({role:selectedRole});
     router.push("/");
   } catch (error) {
     console.log("Error updating role and mobile:", error);

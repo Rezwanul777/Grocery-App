@@ -1,9 +1,15 @@
 import React from 'react'
 import Herosection from './Herosection'
+import CatagorySlider from './CatagorySlider'
+import GroceryGrid from './GroceryGrid'
 
 const UserDashboard = () => {
   return (
-    <div><Herosection/></div>
+   <>
+   <Herosection/>
+   <CatagorySlider/>
+   <GroceryGrid/>
+   </>
   )
 }
 
