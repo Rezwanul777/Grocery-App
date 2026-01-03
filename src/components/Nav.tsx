@@ -4,6 +4,7 @@ import { logoutAction } from "@/actions/auth";
 ;
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IUser } from "@/models/user.model";
+import { RootState } from "@/redux/store";
 import {  Boxes,  ClipboardCheck,  LogOut, Menu, Package, Plus, Search, ShoppingCart, User, X, } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { signOut } from "next-auth/react";
@@ -13,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
 
 // const Nav = ({ user }: { user: IUser }) => {
 //   const [open, setOpen] = React.useState(false);
@@ -155,6 +157,8 @@ const Nav = ({ user }: { user: IUser }) => {
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const[menuOpen,setMenuOpen]=React.useState(false)
 
+  const {cartData}=useSelector((state:RootState)=>state.cart)
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -263,17 +267,19 @@ const Nav = ({ user }: { user: IUser }) => {
               </button>
 
               <Link
-                href={""}
+                href={"/user/cart"}
                 className="relative flex items-center text-white hover:scale-110 transition-transform"
               >
                 <ShoppingCart className="text-white w-9 h-9" />
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-sm text-white">
-                  0
+                  {cartData.length}
                 </span>
               </Link>
             </>
             
           )}
+
+          {/* for admin */}
 
            {user.role=="admin" && <>
           

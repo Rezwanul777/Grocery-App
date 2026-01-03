@@ -32,13 +32,19 @@ const GrocerySchema = new mongoose.Schema<IGrocery>(
     },
     price: { type: Number, required: true },
     image: { type: String, required: true },
-
-    unit: { type: String, required: true , enum: ["kg", "litre", "piece","ml","g","pack"] },
+    unit: {
+      type: String,
+      required: true,
+      enum: ["kg", "litre", "piece", "ml", "g", "pack"],
+    },
     description: { type: String },
     inStock: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
 
-const Grocery= mongoose.model<IGrocery>("Grocery", GrocerySchema);
-export default Grocery
+// ✅ prevent overwrite error in Next.js dev hot reload
+const Grocery =
+  mongoose.models.Grocery || mongoose.model<IGrocery>("Grocery", GrocerySchema);
+
+export default Grocery;
