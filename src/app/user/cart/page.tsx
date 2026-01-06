@@ -1,18 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { ArrowLeft, ShoppingBagIcon, ShoppingBasketIcon } from 'lucide-react'
+import { ArrowLeft, Minus, Plus, ShoppingBagIcon, ShoppingBasketIcon, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import {AnimatePresence, motion} from "motion/react"
-import { useSelector } from 'react-redux'
-import { RootState } from '@/redux/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/redux/store'
 import Image from 'next/image'
+import { decreaseCartItemQuantity, deleteCartItemQuantity, IncreaseCartItemQuantity } from '@/redux/cartSlice'
+import { useRouter } from 'next/navigation'
 
 const CartPage = () => {
-   const cartData = useSelector((state: RootState) => state.cart?.cartData ?? []);
+   const {cartData,subTotal,deliveryFee,finalTotal} = useSelector((state: RootState) => state.cart);
+   const dispatch=useDispatch<AppDispatch>();
+   const router=useRouter()
   return (
     <div className='w-[95%] sm:w-[90%] md:w-[80%] mx-auto mt-6 mb-24 relative'>
+      
         <Link href={"/"} className='absolute -top-2 left-0 text-green-600 flex items-center hover:text-green-800 hover:scale-105 transition-all duration-200 ease-in-out'>
         <ArrowLeft size={20}/>
         <span className='hidden md:inline-block ml-2'>Back to Home</span>
@@ -44,7 +49,7 @@ const CartPage = () => {
             </motion.div>
         ):(
             <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-                    <div>
+                    <div className='lg:col-span-2 flex flex-col gap-4'>
                         <AnimatePresence>
                             {cartData.map((item: any) => (
                                 <motion.div
@@ -68,15 +73,47 @@ const CartPage = () => {
                                     <p className='text-sm text-gray-600'>{item.unit}</p>
                                     <p className='text-sm mt-1 text-gray-600 sm:text-base'>Price :Tk{Number(item.price) * Number(item.quantity)}</p>
                                     </div>
+                                    <div className='flex items-center justify-center sm:justify-end mt-4 sm:mt-0 gap-2 bg-gray-100 px-3 py-2 rounded-full'>
+                                        <button className='bg-white p-1.5 border border-gray-100 rounded-full hover:bg-green-200'><Minus className='w-4 h-4 text-green-600' onClick={()=>dispatch(decreaseCartItemQuantity(item._id))}/></button>
+                                        <span className='text-lg font-semibold text-gray-800 w-6'>{item.quantity}</span>
+                                        <button className='bg-white p-1.5 border border-gray-100 rounded-full hover:bg-green-200'><Plus className='w-4 h-4 text-green-600'onClick={()=>dispatch(IncreaseCartItemQuantity(item._id))}/></button>
+                                        
+                                    </div>
+                                    <button><Trash2 className='w-6 h-6 text-red-600 hover:text-red-800 hover:scale-105 transition-all duration-200 ease-in-out sm:ml-4' onClick={()=>dispatch(deleteCartItemQuantity(item._id))}/></button>
+
                                     </motion.div>
                                     
                             ))}
                         </AnimatePresence>
                     </div>
+                    <div className='bg-white rounded-2xl flex flex-col gap-4 p-6 shadow-lg border border-gray-100 h-fit sticky top-24'>
+                        <h2 className='text-2xl font-semibold text-gray-800 mb-4'>Order Summary</h2>
+                        <div className='space-y-2 text-gray-600 sm:text-base'>
+                            <div className='flex justify-between'>
+                                 <span className='text-gray-600'>Subtotal</span> 
+                            <span className='font-semibold text-gray-800'>Tk {subTotal}</span>
+                            </div>
+                            <div className='flex justify-between'>
+                                 <span className='text-gray-600'>Delivery Fee</span> 
+                            <span className='font-semibold text-gray-800'>Tk {deliveryFee}</span>
+                            </div>
+                            <hr className='my-3'/>
+                            <div className='flex justify-between font-bold text-lg sm:text-xl'>
+                                 <span className='text-gray-600'>Total</span> 
+                            <span className='font-semibold text-gray-800'>Tk {finalTotal}</span>
+                            </div>
+                            <motion.button whileTap={{scale:0.90}} className='bg-green-500 w-full hover:bg-green-600 text-white text-sm sm:text-base py-3 mt-3 rounded-full flex items-center justify-center gap-2 cursor-pointer' onClick={()=>router.push('/user/checkout')}>
+                                Proceed to Checkout
+                            </motion.button>
+                        </div>
+                           
+
+                    </div>
                         
             </div>
         )}
     </div>
+    
   )
 }
 

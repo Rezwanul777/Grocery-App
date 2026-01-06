@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className=" w-full bg-linear-to-b from-green-50 to-white min-h-[200vh]"
+      <body className=" w-full bg-linear-to-b from-green-50 to-white min-h-screen"
         
       >
        <Provider>
